@@ -1,0 +1,30 @@
+  .login-form {
+    background-color: pink;
+    max-width: 600px;
+    margin: 140px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    
+  }
+  .login-form input[type="email"],
+  .login-form input[type="text"],
+  .login-form input[type="password"]{
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.loginAlert {
+    color: red;
+    font-weight: bold;
+    margin-top: '5px';
+    text-align: center;
+    
+}
