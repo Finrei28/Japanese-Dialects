@@ -127,7 +127,7 @@ export default function Modal ({ open, children, onClose}) {
         const newAdmin = { userName, password, email};
 
         try {
-            const { data } = await axios.post(`${URL}api/v1/admin/register`, newAdmin);
+            const { data } = await axios.post(`/api/v1/admin/register`, newAdmin);
             showAlert({ text: data.msg, type: 'success' });
             setRegisterationStep(2);
         } catch (error) {
@@ -146,7 +146,7 @@ export default function Modal ({ open, children, onClose}) {
 
         try {
             const {userName} = formData
-            await axios.post(`${URL}api/v1/admin/verification`, {userName, verificationCode})
+            await axios.post(`/api/v1/admin/verification`, {userName, verificationCode})
             setLoading(false);
             handleSuccess();
         } catch (error) {
@@ -157,8 +157,6 @@ export default function Modal ({ open, children, onClose}) {
         }
     }
 
-    console.log(alert.type)
-    console.log(alert.type === 'success')
     if (!open) {return null;}
     
     return ReactDom.createPortal(

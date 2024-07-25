@@ -74,9 +74,9 @@ const login = async (req, res) => {
     // const message = `Your 2FA Code to login is ${twoFACode}`
     // sendEmail(checkAdmin.email, message)
     const admin = {adminID: checkAdmin._id, userName: checkAdmin.userName}
-    cookieToResponse({ res, admin: admin })
-    
-    res.status(StatusCodes.OK).json()
+    const token = cookieToResponse({ res, admin: admin })
+    console.log(token)
+    res.status(StatusCodes.OK).json({admin:admin, token:req.signedCookies})
 }
 
 const registerVerification = async (req, res) => {

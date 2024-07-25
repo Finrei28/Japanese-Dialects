@@ -18,6 +18,7 @@ const cookieToResponse = ({ res, admin }) => {
         secure: process.env.NODE_ENV === 'production',
         signed: true,
     })
+    return token;
 }
 
 module.exports = {

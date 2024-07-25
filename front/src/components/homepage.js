@@ -65,7 +65,7 @@ export default function Homepage() {
         if (view === 'tokyoJapanese') {
             const miyazakiVocab = async () => {
                 try {
-                    const res = await axios.get(`${URL}api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken:cancelToken.token})
+                    const res = await axios.get(`/api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken:cancelToken.token})
                     if (res.data === 0) {
                         setVocab((prevVocab) => ({
                             ...prevVocab,
@@ -104,7 +104,7 @@ export default function Homepage() {
             // }
             const tokyoVocab = async () => {
                 try {
-                    const res = await axios.get(`${URL}api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken:cancelToken.token})
+                    const res = await axios.get(`api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken:cancelToken.token})
                     setVocab((prevVocab) => ({
                         ...prevVocab,
                         tokyoJapanese: res.data.vocab[0].tokyoJapanese,

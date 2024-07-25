@@ -14,23 +14,20 @@ const notFound = require('./Middleware/notfound');
 const errorHandler = require('./Middleware/error-handler');
 
 
-
+app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.JWT_SECRET));
-app.use(cors());
+
 
 app.use('/api/v1/vocabularys', vocabularys);
 app.use('/api/v1/admin', admin);
 app.use(notFound);
 app.use(errorHandler);
 
-app.get('/', (req, res) => {
-    res.json({ message: "Hello from server!" });
-});
-
 const port = process.env.PORT || 3000;
+
 
 const start = async () => {
     try {
