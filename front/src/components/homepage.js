@@ -66,7 +66,7 @@ export default function Homepage() {
             const miyazakiVocab = async () => {
                 try {
                     const res = await axios.get(`/api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken:cancelToken.token})
-                    console.log(res.data === 0)
+                    console.log(res.data)
                     setVocab((prevVocab) => ({
                         ...prevVocab,
                         miyazakiJapanese: res.data.vocab[0].miyazakiJapanese,
