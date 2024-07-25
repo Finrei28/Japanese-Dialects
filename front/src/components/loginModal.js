@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import { useState } from 'react'
+import axios from 'axios'
 import './modal.css'
 import SuccessNotification from './successNotification'
 import { Navigate, useNavigate } from "react-router-dom";
-const axios = require('axios');
 
 const URL = process.env.REACT_APP_BASE_URL;
 
