@@ -66,24 +66,19 @@ export default function Homepage() {
             const miyazakiVocab = async () => {
                 try {
                     const res = await axios.get(`/api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken:cancelToken.token})
-                    if (res.data === 0) {
+                    console.log(res.data === 0)
+                    setVocab((prevVocab) => ({
+                        ...prevVocab,
+                        miyazakiJapanese: res.data.vocab[0].miyazakiJapanese,
+                    }));
+                } catch (error) {
+                    const { msg } = error.response.data;
+                    if (error.response.status === 404) {
                         setVocab((prevVocab) => ({
                             ...prevVocab,
                             miyazakiJapanese: vocab.tokyoJapanese,
                         }));
                     }
-                    else {
-                    setVocab((prevVocab) => ({
-                        ...prevVocab,
-                        miyazakiJapanese: res.data.vocab[0].miyazakiJapanese,
-                    }));
-                    }
-                } catch (error) {
-                    const { msg } = error.response.data;
-                    setVocab((prevVocab) => ({
-                        ...prevVocab,
-                        miyazakiJapanese: vocab.tokyoJapanese,
-                    }));
                     if (axios.isCancel(error)) {
                         console.log("cancelled")
                     }
@@ -104,17 +99,19 @@ export default function Homepage() {
             // }
             const tokyoVocab = async () => {
                 try {
-                    const res = await axios.get(`api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken:cancelToken.token})
+                    const res = await axios.get(`/api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken:cancelToken.token})
                     setVocab((prevVocab) => ({
                         ...prevVocab,
                         tokyoJapanese: res.data.vocab[0].tokyoJapanese,
                     }));
                 } catch (error) {
                     const { msg } = error.response.data;
-                    setVocab((prevVocab) => ({
-                        ...prevVocab,
-                        tokyoJapanese: vocab.miyazakiJapanese,
-                    }));
+                    if (error.response.status === 404) {
+                        setVocab((prevVocab) => ({
+                            ...prevVocab,
+                            tokyoJapanese: vocab.miyazakiJapanese,
+                        }));
+                    }
                     if (axios.isCancel(error)) {
                         console.log("cancelled")
                     }
