@@ -46,5 +46,5 @@
   "devDependencies": {
     "dotenv": "^16.4.5"
   },
-  "proxy": "http://localhost:3000"
+  "proxy": "https://japanese-dialects-backend.onrender.com/"
 }
