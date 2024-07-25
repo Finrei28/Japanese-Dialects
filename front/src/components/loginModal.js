@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import { useState } from 'react'
-import axios from 'axios'
 import './modal.css'
 import SuccessNotification from './successNotification'
 import { Navigate, useNavigate } from "react-router-dom";
+const axios = require('axios');
 
 const URL = process.env.REACT_APP_BASE_URL;
 
@@ -109,6 +109,7 @@ export default function Modal ({ open, children, onClose}) {
 
         try {
             const { data } = await axios.post(`/api/v1/admin/login`, user);
+            console.log(data)
             handleSuccess();
         } catch (error) {
             const { msg } = error.response.data;
