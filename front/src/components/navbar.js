@@ -5,6 +5,7 @@ import './navbar.css';
 import Modal from './loginModal';
 import AddIcon from '@mui/icons-material/Add';
 
+
 export default function Navbar() {
     const navigate = useNavigate();
 

@@ -6,7 +6,10 @@ import Cookies from 'js-cookie';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RegisterModal from './registerModal';
 
+const URL = process.env.REACT_APP_BASE_URL;
+
 export default function AdminPage() {
+
     const navigate = useNavigate();
     const [modalOpen, setModalOpen] = useState(false);
     const [alert, setAlert] = useState({
@@ -48,7 +51,7 @@ export default function AdminPage() {
         const { tokyoJapanese, miyazakiJapanese } = vocab;
         const newVocab = { tokyoJapanese, miyazakiJapanese};
         try {
-            const { data } = await axios.post('/api/v1/vocabularys', newVocab);
+            const { data } = await axios.post(`${URL}/api/v1/vocabularys`, newVocab);
             showAlert({ text: data.msg , type: 'success'});
             setVocab({ tokyoJapanese: '', miyazakiJapanese: '' })
         } catch (error) {
@@ -58,7 +61,7 @@ export default function AdminPage() {
     }
 
     const handleLogout = async () => {
-        await axios.post("api/v1/admin/logout");
+        await axios.post(`${URL}api/v1/admin/logout`);
         navigate("/")
     }
 

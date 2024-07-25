@@ -7,6 +7,8 @@ import SuccessNotification from './successNotification'
 import CloseIcon from '@mui/icons-material/Close';
 import {LoadingButton} from '@mui/lab';
 
+const URL = process.env.REACT_APP_BASE_URL;
+
 
 const modal_styles = {
     position: 'fixed',
@@ -125,7 +127,7 @@ export default function Modal ({ open, children, onClose}) {
         const newAdmin = { userName, password, email};
 
         try {
-            const { data } = await axios.post('/api/v1/admin/register', newAdmin);
+            const { data } = await axios.post(`${URL}/api/v1/admin/register`, newAdmin);
             showAlert({ text: data.msg, type: 'success' });
             setRegisterationStep(2);
         } catch (error) {
@@ -144,7 +146,7 @@ export default function Modal ({ open, children, onClose}) {
 
         try {
             const {userName} = formData
-            await axios.post('/api/v1/admin/verification', {userName, verificationCode})
+            await axios.post(`${URL}/api/v1/admin/verification`, {userName, verificationCode})
             setLoading(false);
             handleSuccess();
         } catch (error) {

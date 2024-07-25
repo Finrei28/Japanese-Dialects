@@ -6,6 +6,8 @@ import './modal.css'
 import SuccessNotification from './successNotification'
 import { Navigate, useNavigate } from "react-router-dom";
 
+const URL = process.env.REACT_APP_BASE_URL;
+
 const modal_styles = {
     position: 'fixed',
     top: '50%',
@@ -106,7 +108,7 @@ export default function Modal ({ open, children, onClose}) {
         const user = { userName, password};
 
         try {
-            const { data } = await axios.post('/api/v1/admin/login', user);
+            const { data } = await axios.post(`${URL}/api/v1/admin/login`, user);
             handleSuccess();
         } catch (error) {
             const { msg } = error.response.data;

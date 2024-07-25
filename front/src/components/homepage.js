@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import '../components/homepage.css'
 
+const URL = process.env.REACT_APP_BASE_URL;
+
 export default function Homepage() {
     const [alert, setAlert] = useState({
         show: false,
@@ -63,7 +65,7 @@ export default function Homepage() {
         if (view === 'tokyoJapanese') {
             const miyazakiVocab = async () => {
                 try {
-                    const res = await axios.get(`api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken:cancelToken.token})
+                    const res = await axios.get(`${URL}api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken:cancelToken.token})
                     if (res.data === 0) {
                         setVocab((prevVocab) => ({
                             ...prevVocab,
@@ -102,7 +104,7 @@ export default function Homepage() {
             // }
             const tokyoVocab = async () => {
                 try {
-                    const res = await axios.get(`api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken:cancelToken.token})
+                    const res = await axios.get(`${URL}api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken:cancelToken.token})
                     setVocab((prevVocab) => ({
                         ...prevVocab,
                         tokyoJapanese: res.data.vocab[0].tokyoJapanese,
