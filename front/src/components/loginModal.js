@@ -108,7 +108,7 @@ export default function Modal ({ open, children, onClose}) {
         const user = { userName, password};
 
         try {
-            const { data } = await axios.post(`${URL}/api/v1/admin/login`, user);
+            const { data } = await axios.post(`${URL}api/v1/admin/login`, user);
             handleSuccess();
         } catch (error) {
             const { msg } = error.response.data;

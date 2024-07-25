@@ -51,7 +51,7 @@ export default function AdminPage() {
         const { tokyoJapanese, miyazakiJapanese } = vocab;
         const newVocab = { tokyoJapanese, miyazakiJapanese};
         try {
-            const { data } = await axios.post(`${URL}/api/v1/vocabularys`, newVocab);
+            const { data } = await axios.post(`${URL}api/v1/vocabularys`, newVocab);
             showAlert({ text: data.msg , type: 'success'});
             setVocab({ tokyoJapanese: '', miyazakiJapanese: '' })
         } catch (error) {
