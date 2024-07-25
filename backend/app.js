@@ -26,6 +26,10 @@ app.use('/api/v1/admin', admin);
 app.use(notFound);
 app.use(errorHandler);
 
+app.get('/', (req, res) => {
+    res.json({ message: "Hello from server!" });
+});
+
 const port = process.env.PORT || 3000;
 
 const start = async () => {
