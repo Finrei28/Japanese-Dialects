@@ -103,6 +103,7 @@ export default function Modal ({ open, children, onClose}) {
             userName: '',
             password: '',
         });
+        setforgotState(false);
         hideAlert();
     }
 
