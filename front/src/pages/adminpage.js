@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import './adminpage.css'
+import '../index.css'
 import Cookies from 'js-cookie';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import RegisterModal from './registerModal';
+import RegisterModal from '../componenets/registerModal';
 
 const URL = process.env.REACT_APP_BASE_URL;
 

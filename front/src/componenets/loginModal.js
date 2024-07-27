@@ -2,9 +2,11 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { useState } from 'react'
 import axios from 'axios'
-import './modal.css'
 import SuccessNotification from './successNotification'
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
+import '../index.css';
+import InputRow from '../utils/inputRow'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const URL = process.env.REACT_APP_BASE_URL;
 
@@ -14,13 +16,14 @@ const modal_styles = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     backgroundColor: 'pink',
-    padding: '30px 50px',
+    padding: '30px 30px',
     zIndex: 1000,
     maxHeight: '85vh',
     width: '20%',
     maxWidth: '500px',
     overflowY: 'auto',
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.75)",
+    borderRadius: "20px",
 }
 
 const overlay_style = {
@@ -34,12 +37,13 @@ const overlay_style = {
 }
 
 const s = {
-    backgroundColor: "pink",
+    backgroundColor: "white",
     maxWidth: "600px",
     margin: "20px auto",
-    padding: "20px",
+    padding: "50px 10px",
     // boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-    borderRadius: "4px",
+    borderRadius: "20px",
+    
 }
 
 export default function Modal ({ open, children, onClose}) {
@@ -52,6 +56,9 @@ export default function Modal ({ open, children, onClose}) {
     });
     const [success, setSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    const [forgotState, setforgotState] = useState(false);
+    const [email, setEmail] = useState('');
+    const [verified, setVerified] = useState(true);
 
     const showAlert = ({ text, type = 'danger' }) => {
         setAlert({ show: true, text, type });
@@ -109,13 +116,32 @@ export default function Modal ({ open, children, onClose}) {
 
         try {
             const { data } = await axios.post(`/api/v1/admin/login`, user);
-            console.log(data)
+            if (data.msg === 'notVerified') {
+                setVerified(false);
+                return;
+            }
             handleSuccess();
         } catch (error) {
             const { msg } = error.response.data;
             showAlert({ text: msg || 'there was an error' });
         }
     };
+
+    const handleForgotPassword = async (e) => {
+        e.preventDefault();
+        try {
+            const { data } = await axios.post(`/api/v1/admin/forgotPassword`, {email})
+            setEmail('');
+            showAlert({ text: data.msg, type: 'success' })
+        } catch (error) {
+            const { msg } = error.response.data;
+            showAlert({ text: msg || 'there was an error' });
+        }
+    }
+
+    const handleForgotState = async () => {
+        setforgotState(false)
+    }
 
     if (!open) {return null;}
     
@@ -125,27 +151,66 @@ export default function Modal ({ open, children, onClose}) {
             <div onClick={(e) => e.stopPropagation()} style={modal_styles} >
             <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px",}} onClick={handleClose}>×</button>
             <div className='login-container'>
-                <form style={s} className="login-form" id="lost-item-form" onSubmit={handleLogin}>
+                {!forgotState ? (
 
-                    <h1 style={{textAlign:'center', marginTop:'-5%'}}>Sign in</h1>
+                <form style={s} className="form" onSubmit={handleLogin}>
 
-                    <label htmlFor="userName">Username:</label>
-                    <input type="text" id="userName" name="userName" value={formData.userName} onChange={handleChange} required/>
-
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required/>
-
-
+                    <h2 style={{textAlign:'center', marginTop:'-5%'}}>Sign in</h2>
+                    <InputRow
+                        type='text'
+                        label="username"
+                        name='userName'
+                        value={formData.userName}
+                        handleChange={handleChange}
+                    />
+                    <InputRow
+                        type='password'
+                        label='password'
+                        name='password'
+                        value={formData.password}
+                        handleChange={handleChange}
+                    />
 
                     {alert.show &&  (
                     <p className={`loginAlert alert-${alert.type}`}>{alert.text}</p>
                     )}
                     <div style={{ textAlign:'center'}}>
                     <button type="submit" style={{ width: '50%' }}>Log in</button>
+                    <p>
+                        
+                        <Link onClick={() => setforgotState(true)} className='reset-link'>
+                        Forgot your password?
+                        </Link>
+                    </p>
                     </div>
                     
                     
                 </form>
+                )
+                : 
+                (
+                    <form style={s} className="form" onSubmit={handleForgotPassword}>
+                    <ArrowBackIcon style={{ position: 'absolute', top: '10px', left: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px", color:"white"}} onClick={handleForgotState}></ArrowBackIcon>
+                    <h2 style={{textAlign:'center', marginTop:'-5%'}}>Reset Password</h2>
+                    <InputRow
+                        type='email'
+                        label="email"
+                        name='email'
+                        value={email}
+                        handleChange={e => setEmail(e.target.value)}
+                    />
+
+                    {alert.show &&  (
+                    <p className={`loginAlert alert-${alert.type}`}>{alert.text}</p>
+                    )}
+                    <div style={{ textAlign:'center'}}>
+                    <button type="submit" style={{ width: '50%' }}>Send Email</button>
+                    </div>
+                    
+                    
+                </form>
+                )
+                }
             </div>
         </div>
         {success && <SuccessNotification message={successMessage} />}

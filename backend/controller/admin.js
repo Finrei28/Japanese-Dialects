@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const sgMail = require('@sendgrid/mail');
 const Admin = require('../model/admin');
 const errors = require('../errors/index');
-const { cookieToResponse } = require('../utils');
+const { cookieToResponse, sendEmail, sendResetPasswordEmail, hashString } = require('../utils');
 const {StatusCodes} = require('http-status-codes');
 const crypto = require('crypto');
 
@@ -29,23 +29,9 @@ const createAdmin = async (req, res) => {
     }
     const verificationCode = crypto.randomInt(100000, 999999).toString();
     verificationCodes[userName] = verificationCode;
-    const message = `Your verification code to complete registration is ${verificationCode}`
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    const msg = {
-        to: email, // Change to your recipient
-        from: 'miyazakidialect@gmail.com', // Change to your verified sender
-        subject: 'MiyazakiDialect',
-        text: 'You are getting an email from MiyazakiDialect',
-        html: message,
-      }
-      const info = await sgMail
-        .send(msg)
-        .then(() => {
-          console.log('Email sent')
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+    const message = `<p>Your verification code to complete registration is ${verificationCode}</p>`
+    const subject = `Account Verification`;
+    sendEmail(email, subject, message)
     console.log(message)
     console.log(email)
     
@@ -67,6 +53,10 @@ const login = async (req, res) => {
     
     if (!checkPassword) {
         throw new errors.UnauthenticatedError('Incorrect username or password')
+    }
+
+    if (checkAdmin.isVerified == false) {
+        return res.status(401).json({msg: 'notVerified'})
     }
 
     // const twoFACode = crypto.randomInt(100000, 999999).toString();
@@ -104,27 +94,53 @@ const logout = async (req, res) => {
 }
 
 
-const sendEmail = async (req, res) => {
-    const {email, message} = req.body
-    console.log(req.body)
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    const msg = {
-        to: email, // Change to your recipient
-        from: 'miyazakidialect@gmail.com', // Change to your verified sender
-        subject: 'MiyazakiDialect',
-        text: 'You are getting an email from MiyazakiDialect',
-        html: message,
-      }
-      const info = await sgMail
-        .send(msg)
-        .then(() => {
-          console.log('Email sent')
-          res.status(200).json({ message: 'Email sent successfully' });
-        })
-        .catch((error) => {
-          console.error(error)
-          res.status(500).json({ message: 'Failed to send email' });
-        })
+
+    const forgotPassword = async (req, res) => {
+        const { email } = req.body;
+        if (!email) {
+            throw new errors.BadRequestError('Please provide a valid email');
+        }
+        const admin = await Admin.findOne({ email });
+        if (admin) {
+            const passwordToken = crypto.randomBytes(70).toString('hex');
+            
+            sendResetPasswordEmail({email: email, token: passwordToken})
+
+            const thirtyMinutes = 1000 * 60 * 30;
+            const passwordTokenExpiryDate = new Date(Date.now() + thirtyMinutes);
+            
+            admin.passwordToken = hashString(passwordToken);
+            admin.passwordTokenExpiryDate = passwordTokenExpiryDate;
+            await admin.save();
+        }
+
+        res.status(StatusCodes.OK).json({msg: "We've sent you a password reset to your email"})
+    }
+
+    const resetPassword = async (req, res) => {
+        const { token, email, password }  = req.body;
+        console.log(token)
+        console.log(email)
+        console.log(password)
+        if (!token || !email || !password ) {
+            throw new errors.BadRequestError('Values missing')
+        }
+        if (password.length < 8) {
+            throw new errors.BadRequestError('Password needs to be at least 8 characters long')
+        }
+        const admin = await Admin.findOne({email});
+        if (admin) {
+            const today = new Date();
+            if (admin.passwordToken === hashString(token) && admin.passwordTokenExpiryDate > today) {
+                console.log("true")
+                admin.password = password;
+                admin.passwordToken = null;
+                admin.passwordTokenExpiryDate = null;
+                await admin.save();
+            }
+
+        }
+        res.status(StatusCodes.OK).json({msg: 'Password changed'})
     }
 
 module.exports = {
@@ -133,5 +149,7 @@ module.exports = {
     login,
     logout,
     registerVerification,
+    forgotPassword,
+    resetPassword,
 }
 

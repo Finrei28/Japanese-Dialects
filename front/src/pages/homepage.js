@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import '../components/homepage.css'
+import '../index.css'
 
 const URL = process.env.REACT_APP_BASE_URL;
 
@@ -125,7 +125,7 @@ export default function Homepage() {
             }
             }
             tokyoVocab();
-    }}, [view === 'tokyoJapanese' ? vocab.tokyoJapanese : vocab.miyazakiJapanese]); // Specify dependencies to control when useEffect should run
+    }}, [view === 'tokyoJapanese' ? vocab.tokyoJapanese : vocab.miyazakiJapanese]);
 
     return (
         <>
@@ -157,9 +157,10 @@ export default function Homepage() {
         </>
         )}
         {alert.show && (
-             <p className={`homePageAlert alert-${alert.type}`} style={{ color: 'red', marginTop: '5px' }}>{alert.text}</p>
-        )}
+            <p className={`homePageAlert alert-${alert.type}`} style={{ color: 'red', marginTop: '5px' }}>{alert.text}</p>
+       )}
         </>
+        
     )
     
 }

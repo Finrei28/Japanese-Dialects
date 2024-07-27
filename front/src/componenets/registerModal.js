@@ -2,10 +2,11 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { useState } from 'react'
 import axios from 'axios'
-import './modal.css'
 import SuccessNotification from './successNotification'
 import CloseIcon from '@mui/icons-material/Close';
 import {LoadingButton} from '@mui/lab';
+import InputRow from '../utils/inputRow'
+import '../index.css'
 
 const URL = process.env.REACT_APP_BASE_URL;
 
@@ -16,13 +17,14 @@ const modal_styles = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     backgroundColor: 'pink',
-    padding: '30px 50px',
+    padding: '30px 30px',
     zIndex: 1000,
     maxHeight: '85vh',
     width: '20%',
     maxWidth: '500px',
     overflowY: 'auto',
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.75)",
+    borderRadius: "20px",
 }
 
 const overlay_style = {
@@ -36,12 +38,12 @@ const overlay_style = {
 }
 
 const s = {
-    backgroundColor: "pink",
+    backgroundColor: "white",
     maxWidth: "600px",
     margin: "20px auto",
-    padding: "20px",
+    padding: "50px 10px",
     // boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-    borderRadius: "4px",
+    borderRadius: "20px",
 }
 
 export default function Modal ({ open, children, onClose}) {
@@ -143,7 +145,7 @@ export default function Modal ({ open, children, onClose}) {
         if (!verificationCode) {
             return;
         }
-
+    
         try {
             const {userName} = formData
             await axios.post(`/api/v1/admin/verification`, {userName, verificationCode})
@@ -157,6 +159,7 @@ export default function Modal ({ open, children, onClose}) {
         }
     }
 
+
     if (!open) {return null;}
     
     return ReactDom.createPortal(
@@ -166,30 +169,43 @@ export default function Modal ({ open, children, onClose}) {
             <CloseIcon style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px",}} onClick={handleClose}></CloseIcon>
             <div className='login-container'>
                 {registerationStep === 1 ? (
-                    <form style={s} className="login-form" id="lost-item-form" onSubmit={handleRegister}>
+                    <form style={s} className="form" onSubmit={handleRegister}>
 
                         <h1 style={{textAlign:'center', marginTop:'-5%'}}>Admin Registeration</h1>
 
-                        <label htmlFor="userName">Username:</label>
-                        <input type="text" id="userName" name="userName" value={formData.userName} onChange={handleChange} required/>
+                        <InputRow
+                            type='text'
+                            label="username"
+                            name='userName'
+                            value={formData.userName}
+                            handleChange={handleChange}
+                        />
+                        <InputRow
+                            type='password'
+                            label="password"
+                            name='password'
+                            value={formData.password}
+                            handleChange={handleChange}
+                        />
+                        <InputRow
+                            type='password'
+                            label="confirm password"
+                            name='confirmPassword'
+                            value={formData.confirmPassword}
+                            handleChange={handleChange}
+                        />
+                        <InputRow
+                            type='email'
+                            label="email"
+                            name='email'
+                            value={formData.email}
+                            handleChange={handleChange}
+                        />
 
-                        <label htmlFor="password">Password:</label>
-                        <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required/>
-
-                        <label htmlFor="confirmPassword">Confirm Password:</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required/>
-
-                        <label htmlFor="email">Email:</label>
-                        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required/>
 
 
-
-                        {alert.show && (alert.type === 'success') ? (
-                            <p className={`verificationAlert alert-${alert.type}`} style={{ color: 'green', marginTop: '5px' }}>{alert.text}</p>
-                        )
-                        :
-                        (
-                            <p className={`verificationAlert alert-${alert.type}`} style={{ color: 'green', marginTop: '5px' }}>{alert.text}</p>
+                        {alert.show &&(
+                            <p className={`Alert alert-${alert.type}`} >{alert.text}</p>
                         )
                         }
                         <div style={{ textAlign:'center'}}>
@@ -202,31 +218,32 @@ export default function Modal ({ open, children, onClose}) {
                 )
                 :
                 (
-                    <form style={s} className="login-form" id="lost-item-form" onSubmit={handleVerification}>
+                    <form style={s} className="form" onSubmit={handleVerification}>
 
                         <h1 style={{textAlign:'center', marginTop:'-5%'}}>Verify your email</h1>
 
-                        <label htmlFor="verificationCode">Verification Code:</label>
-                        <input type="text" id="verificationCode" name="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required/>
+                        <InputRow
+                            type='verificationCode'
+                            label="verification code"
+                            name='verificationCode'
+                            value={verificationCode}
+                            handleChange={(e) => setVerificationCode(e.target.value)}
+                        />
 
-                        {alert.show && (alert.type === 'success') ? (
-                            <p className={`verificationAlert alert-${alert.type}`} style={{ color: 'green', marginTop: '5px' }}>{alert.text}</p>
-                        )
-                        :
-                        (
-                            <p className={`verificationAlert alert-${alert.type}`} style={{ color: 'red', marginTop: '5px' }}>{alert.text}</p>
+                        {alert.show && (
+                            <p className={`verificationAlert alert-${alert.type}`}>{alert.text}</p>
                         )
                         }
                         <div style={{ textAlign:'center', color:'pink'}}>
                         {/* <button type="submit" style={{ width: '50%' }}>Verify Code</button> */}
-                            <div className='loadingButton'>
+                            <div>
                                 <LoadingButton
-                                type='submit'
                                 onClick={handleVerification}
                                 loading={loading}
                                 loadingIndicator="Verifying…"
+                                endIcon = "verified"
                                 variant="outlined"
-                                sx={{ color: 'blue', borderColor:'hotpink'}}
+                                sx={{ color: 'blue', borderColor:'hotpink', borderRadius: '10px'}}
                                 >
                                 <span>Verify Code</span>
                                 </LoadingButton>

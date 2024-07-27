@@ -25,7 +25,13 @@ const AdminSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false,
-    }
+    },
+    passwordToken: {
+        type: String,
+    },
+    passwordTokenExpiryDate: {
+        type: Date,
+    },
 })
 
 AdminSchema.pre('save', async function() {

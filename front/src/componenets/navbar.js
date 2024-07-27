@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
-import './navbar.css';
+import '../index.css'
 import Modal from './loginModal';
 import AddIcon from '@mui/icons-material/Add';
 
