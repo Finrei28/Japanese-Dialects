@@ -10,7 +10,6 @@ const verificationCodes = {};
 const TwoFACodes = {};
 
 const createAdmin = async (req, res) => {
-    console.log(req.body)
     const {userName, password, email} = req.body
     const checkUserName = await Admin.findOne({ userName:userName });
     const checkEmail = await Admin.findOne({ email:email });
@@ -32,11 +31,21 @@ const createAdmin = async (req, res) => {
     const message = `<p>Your verification code to complete registration is ${verificationCode}</p>`
     const subject = `Account Verification`;
     sendEmail(email, subject, message)
-    console.log(message)
-    console.log(email)
     
     await Admin.create({userName, password, email})
     res.status(StatusCodes.OK).json({msg: "We've sent you a verification code to your email"})
+}
+
+const resendVerificationCode = async (req, res) => {
+    const {userName} = req.body
+    const admin = await Admin.findOne({userName})
+    const verificationCode = crypto.randomInt(100000, 999999).toString();
+    verificationCodes[userName] = verificationCode;
+    const message = `<p>Your verification code to complete registration is ${verificationCode}</p>`
+    const subject = `Account Verification`;
+    console.log()
+    sendEmail(admin.email, subject, message)
+    res.status(StatusCodes.OK).json({msg: "Email Resent"})
 }
 
 const login = async (req, res) => {
@@ -151,5 +160,6 @@ module.exports = {
     registerVerification,
     forgotPassword,
     resetPassword,
+    resendVerificationCode,
 }
 

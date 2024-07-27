@@ -202,11 +202,13 @@ button {
 
 .homePageButton {
   display: flex;
-  align-items:start;
-  flex-grow: 0; 
   margin-right: auto;
   cursor: pointer;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+  background-color: hotpink;
   color: white;
+  border: none;
+  border-radius: 10px;
   
 }
 
@@ -231,3 +233,12 @@ button {
   margin-right: 20px;
 }
 
+.adminPage {
+  cursor: pointer;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+  background-color: hotpink;
+  color: white;
+  border: none;
+  border-radius: 10px;
+
+}

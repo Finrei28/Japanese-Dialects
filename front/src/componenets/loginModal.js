@@ -7,6 +7,8 @@ import { Navigate, useNavigate, Link } from "react-router-dom";
 import '../index.css';
 import InputRow from '../utils/inputRow'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import VerificationModal from './verificationModal'
+import {LoadingButton} from '@mui/lab';
 
 const URL = process.env.REACT_APP_BASE_URL;
 
@@ -59,6 +61,8 @@ export default function Modal ({ open, children, onClose}) {
     const [forgotState, setforgotState] = useState(false);
     const [email, setEmail] = useState('');
     const [verified, setVerified] = useState(true);
+    const [verificationCode, setVerificationCode] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const showAlert = ({ text, type = 'danger' }) => {
         setAlert({ show: true, text, type });
@@ -97,6 +101,22 @@ export default function Modal ({ open, children, onClose}) {
 
     };
 
+    const handleVerificationSuccess = () => {
+        setSuccess(true);
+        setSuccessMessage('Email Verified Successfully \n Please Log in')
+        setVerificationCode('');
+        setFormData({
+            userName: '',
+            password: '',
+        });
+        setTimeout(() => {
+            onClose();
+            setSuccess(false);
+            navigate("/");
+            setVerified(true);
+        }, 2000);
+    }
+
     const handleClose = () => {
         onClose();
         setFormData({
@@ -112,18 +132,19 @@ export default function Modal ({ open, children, onClose}) {
     const handleLogin = async (e) => {
         e.preventDefault();
         hideAlert();
-        const { userName, password} = formData;
+        const { userName, password } = formData;
         const user = { userName, password};
 
         try {
             const { data } = await axios.post(`/api/v1/admin/login`, user);
-            if (data.msg === 'notVerified') {
-                setVerified(false);
-                return;
-            }
             handleSuccess();
         } catch (error) {
             const { msg } = error.response.data;
+            if (msg === 'notVerified') {
+                await axios.post(`/api/v1/admin/resendVerificationCode`, { userName })
+                setVerified(false);
+                return;
+            }
             showAlert({ text: msg || 'there was an error' });
         }
     };
@@ -144,6 +165,27 @@ export default function Modal ({ open, children, onClose}) {
         setforgotState(false)
     }
 
+    const handleVerification = async (e) => {
+        setLoading(true);
+        e.preventDefault();
+        hideAlert();
+        try {
+            const {userName} = formData
+            await axios.post(`/api/v1/admin/verification`, {userName, verificationCode})
+            setLoading(false);
+            handleVerificationSuccess();
+        } catch (error) {
+            const { msg } = error.response.data;
+            console.log(error);
+            showAlert({ text: msg || 'There was an error' });
+            setLoading(false);
+        }
+    }
+
+    const handleVerificationCode = (e) => {
+        setVerificationCode(e.target.value)
+    }
+
     if (!open) {return null;}
     
     return ReactDom.createPortal(
@@ -152,43 +194,7 @@ export default function Modal ({ open, children, onClose}) {
             <div onClick={(e) => e.stopPropagation()} style={modal_styles} >
             <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px",}} onClick={handleClose}>×</button>
             <div className='login-container'>
-                {!forgotState ? (
-
-                <form style={s} className="form" onSubmit={handleLogin}>
-
-                    <h2 style={{textAlign:'center', marginTop:'-5%'}}>Sign in</h2>
-                    <InputRow
-                        type='text'
-                        label="username"
-                        name='userName'
-                        value={formData.userName}
-                        handleChange={handleChange}
-                    />
-                    <InputRow
-                        type='password'
-                        label='password'
-                        name='password'
-                        value={formData.password}
-                        handleChange={handleChange}
-                    />
-
-                    {alert.show &&  (
-                    <p className={`loginAlert alert-${alert.type}`}>{alert.text}</p>
-                    )}
-                    <div style={{ textAlign:'center'}}>
-                    <button type="submit" style={{ width: '50%' }}>Log in</button>
-                    <p>
-                        
-                        <Link onClick={() => setforgotState(true)} className='reset-link'>
-                        Forgot your password?
-                        </Link>
-                    </p>
-                    </div>
-                    
-                    
-                </form>
-                )
-                : 
+                {forgotState ?
                 (
                     <form style={s} className="form" onSubmit={handleForgotPassword}>
                     <ArrowBackIcon style={{ position: 'absolute', top: '10px', left: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px", color:"white"}} onClick={handleForgotState}></ArrowBackIcon>
@@ -211,6 +217,56 @@ export default function Modal ({ open, children, onClose}) {
                     
                 </form>
                 )
+                : verified ?
+                (
+
+                    <form style={s} className="form" onSubmit={handleLogin}>
+    
+                        <h2 style={{textAlign:'center', marginTop:'-5%'}}>Sign in</h2>
+                        <InputRow
+                            type='text'
+                            label="username"
+                            name='userName'
+                            value={formData.userName}
+                            handleChange={handleChange}
+                        />
+                        <InputRow
+                            type='password'
+                            label='password'
+                            name='password'
+                            value={formData.password}
+                            handleChange={handleChange}
+                        />
+    
+                        {alert.show &&  (
+                        <p className={`loginAlert alert-${alert.type}`}>{alert.text}</p>
+                        )}
+                        <div style={{ textAlign:'center'}}>
+                        <button type="submit" style={{ width: '50%' }}>Log in</button>
+                        <p>
+                            
+                            <Link onClick={() => setforgotState(true)} className='reset-link'>
+                            Forgot your password?
+                            </Link>
+                        </p>
+                        </div>
+                        
+                        
+                    </form>
+                    )
+                    : 
+                    (
+                        <VerificationModal
+                            s = {s}
+                            handleVerification={handleVerification}
+                            verificationCode={verificationCode}
+                            InputRow={InputRow}
+                            alert={alert}
+                            LoadingButton={LoadingButton}
+                            loading={loading}
+                            handleVerificationCode={handleVerificationCode}
+                        />
+                    )
                 }
             </div>
         </div>

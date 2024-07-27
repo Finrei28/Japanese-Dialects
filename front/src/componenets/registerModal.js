@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {LoadingButton} from '@mui/lab';
 import InputRow from '../utils/inputRow'
 import '../index.css'
+import VerificationModal from './verificationModal'
 
 const URL = process.env.REACT_APP_BASE_URL;
 
@@ -159,6 +160,10 @@ export default function Modal ({ open, children, onClose}) {
         }
     }
 
+    const handleVerificationCode = (e) => {
+        setVerificationCode(e.target.value)
+    }
+
 
     if (!open) {return null;}
     
@@ -218,41 +223,16 @@ export default function Modal ({ open, children, onClose}) {
                 )
                 :
                 (
-                    <form style={s} className="form" onSubmit={handleVerification}>
-
-                        <h1 style={{textAlign:'center', marginTop:'-5%'}}>Verify your email</h1>
-
-                        <InputRow
-                            type='verificationCode'
-                            label="verification code"
-                            name='verificationCode'
-                            value={verificationCode}
-                            handleChange={(e) => setVerificationCode(e.target.value)}
-                        />
-
-                        {alert.show && (
-                            <p className={`verificationAlert alert-${alert.type}`}>{alert.text}</p>
-                        )
-                        }
-                        <div style={{ textAlign:'center', color:'pink'}}>
-                        {/* <button type="submit" style={{ width: '50%' }}>Verify Code</button> */}
-                            <div>
-                                <LoadingButton
-                                onClick={handleVerification}
-                                loading={loading}
-                                loadingIndicator="Verifying…"
-                                endIcon = "verified"
-                                variant="outlined"
-                                sx={{ color: 'blue', borderColor:'hotpink', borderRadius: '10px'}}
-                                >
-                                <span>Verify Code</span>
-                                </LoadingButton>
-
-                        </div>
-                        </div>
-                        
-                        
-                    </form>
+                    <VerificationModal
+                        s = {s}
+                        handleVerification={handleVerification}
+                        verificationCode={verificationCode}
+                        InputRow={InputRow}
+                        alert={alert}
+                        LoadingButton={LoadingButton}
+                        loading={loading}
+                        handleVerificationCode={handleVerificationCode}
+                    />
                 )}
             </div>
         </div>
