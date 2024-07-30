@@ -15,11 +15,12 @@ const errorHandler = require('./Middleware/error-handler');
 
 
 
+app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.JWT_SECRET));
-app.use(cors());
+
 
 
 app.use('/api/v1/vocabularys', vocabularys);

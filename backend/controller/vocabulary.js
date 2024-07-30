@@ -36,7 +36,7 @@ const addVocab = async (req, res) => {
 
 const getTokyoVocab = async (req, res) => {
         const { vocabulary:miyazakiVocab } = req.params;
-        const vocab = await Vocabulary.find({miyazakiJapanese:miyazakiVocab})
+        const vocab = await Vocabulary.find({miyazakiJapanese:miyazakiVocab}, 'tokyoJapanese')
         if (vocab.length == 0) {
             //throw new NotFoundError(`No translation for ${miyazakiVocab} is found`)
             return res.status(404).json();
@@ -48,7 +48,7 @@ const getTokyoVocab = async (req, res) => {
 const getMiyazakiVocab = async (req, res) => {
 
         const { vocabulary:tokyoVocab } = req.params;
-        const vocab = await Vocabulary.find({tokyoJapanese: tokyoVocab})
+        const vocab = await Vocabulary.find({tokyoJapanese: tokyoVocab}, 'miyazakiJapanese')
         if (vocab.length == 0) {
             //throw new NotFoundError(`No translation for ${tokyoVocab} is found`)
             return res.status(404).json(0);

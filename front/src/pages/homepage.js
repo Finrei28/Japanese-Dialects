@@ -20,8 +20,8 @@ export default function Homepage() {
     };
 
     const [vocab, setVocab] = useState({
-        tokyoJapanese: '',
-        miyazakiJapanese: '',
+        tokyoJapanese: [],
+        miyazakiJapanese: [],
     })
     const [view, setView] = useState('tokyoJapanese');
 
@@ -39,7 +39,7 @@ export default function Homepage() {
         const value = e.target.value;
         if (validateJapanese(value)) {
             setVocab(
-                prev => ({...prev, [e.target.name]: value})
+                prev => ({...prev, [e.target.name]: [value]})
             )
         }
         else {
@@ -56,7 +56,7 @@ export default function Homepage() {
     const handleJapaneseChange = () => {
         hideAlert();
         setView(view === 'tokyoJapanese' ? 'miyazakiJapanese' : 'tokyoJapanese');
-        setVocab({tokyoJapanese: '', miyazakiJapanese: '',})
+        setVocab({tokyoJapanese: [], miyazakiJapanese: [],})
     }
 
     useEffect(() => {
@@ -66,10 +66,10 @@ export default function Homepage() {
             const miyazakiVocab = async () => {
                 try {
                     const res = await axios.get(`/api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken:cancelToken.token})
-                    console.log(res.data)
+                    const miyazakiJapanese = res.data.vocab.map((item) => item.miyazakiJapanese)
                     setVocab((prevVocab) => ({
                         ...prevVocab,
-                        miyazakiJapanese: res.data.vocab[0].miyazakiJapanese,
+                        miyazakiJapanese: miyazakiJapanese
                     }));
                 } catch (error) {
                     const { msg } = error.response.data;
@@ -100,9 +100,10 @@ export default function Homepage() {
             const tokyoVocab = async () => {
                 try {
                     const res = await axios.get(`/api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken:cancelToken.token})
+                    const tokyoJapanese = res.data.vocab.map((item) => item.tokyoJapanese)
                     setVocab((prevVocab) => ({
                         ...prevVocab,
-                        tokyoJapanese: res.data.vocab[0].tokyoJapanese,
+                        tokyoJapanese: tokyoJapanese,
                     }));
                 } catch (error) {
                     const { msg } = error.response.data;
@@ -126,7 +127,6 @@ export default function Homepage() {
             }
             tokyoVocab();
     }}, [view === 'tokyoJapanese' ? vocab.tokyoJapanese : vocab.miyazakiJapanese]);
-
     return (
         <>
         <div className='title'>
@@ -134,13 +134,17 @@ export default function Homepage() {
         </div>
         {view === 'tokyoJapanese' ? (
         <>
-            <label htmlFor='tokyoJapanese'>Tokyo Japanese</label>
+            <label htmlFor='tokyoJapanese'>Tokyo Japanese:</label>
             <input type='text' id='tokyoJapanese' name='tokyoJapanese' value={vocab.tokyoJapanese} className='vocab' onChange={inputVocabChange} ></input>
             <br></br>
             <button onClick={handleJapaneseChange}>Swap</button>
             <br></br>
-            <label htmlFor='miyazakiJapanese'>Miyazaki Japanese</label>
-            <input type='text' id='miyazakiJapanese' name='miyazakiJapanese' value={vocab.miyazakiJapanese} className='vocab' disabled></input>
+            <label htmlFor='miyazakiJapanese' >Miyazaki Japanese:</label>
+            {vocab.miyazakiJapanese.map((item, index) => (
+            <div key={index} className='results'>
+              {item}
+            </div>
+            ))}
         </>
         )
         :
@@ -152,7 +156,11 @@ export default function Homepage() {
             <button onClick={handleJapaneseChange}>Swap</button>
             <br></br>
             <label htmlFor='tokyoJapanese'>Tokyo Japanese</label>
-            <input type='text' id='tokyoJapanese' name='tokyoJapanese' value={vocab.tokyoJapanese} className='vocab' disabled ></input>
+            {vocab.tokyoJapanese.map((item, index) => (
+            <div key={index} className='results'>
+              {item}
+            </div>
+            ))}
             
         </>
         )}

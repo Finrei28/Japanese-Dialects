@@ -12,22 +12,6 @@ import {LoadingButton} from '@mui/lab';
 
 const URL = process.env.REACT_APP_BASE_URL;
 
-const modal_styles = {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: 'pink',
-    padding: '30px 30px',
-    zIndex: 1000,
-    maxHeight: '85vh',
-    width: '20%',
-    maxWidth: '500px',
-    overflowY: 'auto',
-    boxShadow: "0 0 10px rgba(0, 0, 0, 0.75)",
-    borderRadius: "20px",
-}
-
 const overlay_style = {
     position: 'fixed',
     top: 0,
@@ -145,7 +129,7 @@ export default function Modal ({ open, children, onClose}) {
                 setVerified(false);
                 return;
             }
-            showAlert({ text: msg || 'there was an error' });
+            showAlert({ text: msg || 'Please try again later' });
         }
     };
 
@@ -157,7 +141,7 @@ export default function Modal ({ open, children, onClose}) {
             showAlert({ text: data.msg, type: 'success' })
         } catch (error) {
             const { msg } = error.response.data;
-            showAlert({ text: msg || 'there was an error' });
+            showAlert({ text: msg || 'Please try again later' });
         }
     }
 
@@ -177,7 +161,7 @@ export default function Modal ({ open, children, onClose}) {
         } catch (error) {
             const { msg } = error.response.data;
             console.log(error);
-            showAlert({ text: msg || 'There was an error' });
+            showAlert({ text: msg || 'Please try again later' });
             setLoading(false);
         }
     }
@@ -191,7 +175,7 @@ export default function Modal ({ open, children, onClose}) {
     return ReactDom.createPortal(
         <>
         <div style={overlay_style} onClick={handleClose}/>
-            <div onClick={(e) => e.stopPropagation()} style={modal_styles} >
+            <div className='modal' onClick={(e) => e.stopPropagation()} >
             <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px",}} onClick={handleClose}>×</button>
             <div className='login-container'>
                 {forgotState ?
