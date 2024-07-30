@@ -129,44 +129,51 @@ export default function Homepage() {
     }}, [view === 'tokyoJapanese' ? vocab.tokyoJapanese : vocab.miyazakiJapanese]);
     return (
         <>
-        <div className='title'>
-        <h3>Tokyo Dialect - Miyazaki Dialect</h3>
-        </div>
+        <div className='homepage-container'>
+        <h3 className='homepage-title'>Tokyo Dialect - Miyazaki Dialect</h3>
         {view === 'tokyoJapanese' ? (
-        <>
-            <label htmlFor='tokyoJapanese'>Tokyo Japanese:</label>
-            <input type='text' id='tokyoJapanese' name='tokyoJapanese' value={vocab.tokyoJapanese} className='vocab' onChange={inputVocabChange} ></input>
-            <br></br>
-            <button onClick={handleJapaneseChange}>Swap</button>
-            <br></br>
-            <label htmlFor='miyazakiJapanese' >Miyazaki Japanese:</label>
-            {vocab.miyazakiJapanese.map((item, index) => (
-            <div key={index} className='results'>
-              {item}
-            </div>
-            ))}
-        </>
+            <>
+                <label htmlFor='tokyoJapanese'>Tokyo Japanese:</label>
+                <input type='text' id='tokyoJapanese' name='tokyoJapanese' value={vocab.tokyoJapanese} className='vocab' onChange={inputVocabChange} ></input>
+                <br></br>
+                <button onClick={handleJapaneseChange}>Swap</button>
+                <br></br>
+                <label htmlFor='miyazakiJapanese' >Miyazaki Japanese:</label>
+                <div className='results-container'>
+                {vocab.miyazakiJapanese.map((item, index) => (
+                <div key={index} className='results'>
+                {item}
+                </div>
+                ))}
+                </div>
+            </>
         )
         :
         (
         <>
+            <div className='homepage-container'>
             <label htmlFor='miyazakiJapanese'>Miyazaki Japanese</label>
             <input type='text' id='miyazakiJapanese' name='miyazakiJapanese' value={vocab.miyazakiJapanese} className='vocab' onChange={inputVocabChange} ></input>
             <br></br>
             <button onClick={handleJapaneseChange}>Swap</button>
             <br></br>
             <label htmlFor='tokyoJapanese'>Tokyo Japanese</label>
+            <div className='results-container'>
             {vocab.tokyoJapanese.map((item, index) => (
             <div key={index} className='results'>
               {item}
             </div>
             ))}
+            </div>
+            </div>
             
         </>
         )}
         {alert.show && (
             <p className={`homePageAlert alert-${alert.type}`} style={{ color: 'red', marginTop: '5px' }}>{alert.text}</p>
        )}
+        </div>
+        
         </>
         
     )
