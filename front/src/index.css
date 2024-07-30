@@ -48,6 +48,7 @@ code {
   --headingFont: 'Roboto', sans-serif;
   --bodyFont: 'Nunito', sans-serif;
   --smallText: 0.7em;
+  --label: 1.5rem;
   /* rest of the vars */
   --backgroundColor: var(--grey-50);
   --textColor: var(--grey-900);
@@ -58,14 +59,6 @@ code {
   --fixed-width: 2000px;
   --fluid-width: 90vw;
 
-  /* box shadow*/
-  --shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 h1,
@@ -115,7 +108,6 @@ h5 {
 
 .form-label {
   display: block;
-  /* font-size: var(--smallText); */
   margin-bottom: 0.5rem;
   text-transform: capitalize;
   letter-spacing: var(--letterSpacing);
@@ -160,14 +152,15 @@ h5 {
 
 .homePageAlert {
   position: absolute;
-  bottom: 45%;
+  bottom: 60%;
 }
 
 .vocab {
+  width: auto;
   padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  margin-bottom: 30px;
+  border: 1px solid #ccc; 
+  border-radius: 4px;
 }
 
 
@@ -203,7 +196,7 @@ button {
   100%{ top:50%; opacity: 1;}
 }
 
-.homepage-title {
+.homepage-title, .adminpage-title {
   color: black;
   text-align: center;
   position: relative;
@@ -269,16 +262,17 @@ button {
   font-size: 1rem;
 }
 
-.homepage-container {
+.homepage-container, .adminpage-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   height: 100vh;
-  font-size: 1.5rem;
+  font-size: var(--label);
 }
 
 .results-container {
   height: 300px;
   overflow-y: auto;
 }
+

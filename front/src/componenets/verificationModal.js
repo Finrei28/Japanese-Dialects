@@ -7,7 +7,7 @@ const VerificationModal = ({s, handleVerification, verificationCode, InputRow, a
                         <h1 style={{textAlign:'center', marginTop:'-5%'}}>Verify your email</h1>
 
                         <InputRow
-                            type='verificationCode'
+                            type='text'
                             label="verification code"
                             name='verificationCode'
                             value={verificationCode}

@@ -135,9 +135,7 @@ export default function Homepage() {
             <>
                 <label htmlFor='tokyoJapanese'>Tokyo Japanese:</label>
                 <input type='text' id='tokyoJapanese' name='tokyoJapanese' value={vocab.tokyoJapanese} className='vocab' onChange={inputVocabChange} ></input>
-                <br></br>
-                <button onClick={handleJapaneseChange}>Swap</button>
-                <br></br>
+                <button style={{marginBottom:'20px'}} onClick={handleJapaneseChange}>Swap</button>
                 <label htmlFor='miyazakiJapanese' >Miyazaki Japanese:</label>
                 <div className='results-container'>
                 {vocab.miyazakiJapanese.map((item, index) => (
@@ -151,12 +149,9 @@ export default function Homepage() {
         :
         (
         <>
-            <div className='homepage-container'>
             <label htmlFor='miyazakiJapanese'>Miyazaki Japanese</label>
             <input type='text' id='miyazakiJapanese' name='miyazakiJapanese' value={vocab.miyazakiJapanese} className='vocab' onChange={inputVocabChange} ></input>
-            <br></br>
-            <button onClick={handleJapaneseChange}>Swap</button>
-            <br></br>
+            <button style={{marginBottom:'20px'}} onClick={handleJapaneseChange}>Swap</button>
             <label htmlFor='tokyoJapanese'>Tokyo Japanese</label>
             <div className='results-container'>
             {vocab.tokyoJapanese.map((item, index) => (
@@ -164,7 +159,6 @@ export default function Homepage() {
               {item}
             </div>
             ))}
-            </div>
             </div>
             
         </>

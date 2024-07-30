@@ -57,6 +57,9 @@ export default function AdminPage() {
         } catch (error) {
             const { msg } = error.response.data;
             showAlert({ text: msg || 'there was an error' });
+            setTimeout(() => {
+                hideAlert();
+            }, 3000);
         }
     }
     const handleLogout = async () => {
@@ -71,10 +74,6 @@ export default function AdminPage() {
     const handleModelClose = async () => {
         setModalOpen(false)
     }
-
-    // const handleRegister = async () => {
-
-    // }
 
 
     return (
@@ -91,26 +90,21 @@ export default function AdminPage() {
                 { <button onClick={handleLogout}>Log out</button>}
             </div>
         </div>
-        <div className='title'>
-        <h3>Add a new vocabulary</h3>
+        <div className='adminpage-container'>
+            <h3 className='adminpage-title'>Add a new vocabulary</h3>
+
+                <label htmlFor='tokyoJapanese'>Tokyo Japanese:</label>
+                <input type='text' id='tokyoJapanese' name='tokyoJapanese' value={vocab.tokyoJapanese} className='vocab' onChange={inputVocabChange} ></input>
+                <label htmlFor='miyazakiJapanese'>Miyazaki Japanese:</label>
+                <input type='text' id='miyazakiJapanese' name='miyazakiJapanese' value={vocab.miyazakiJapanese} className='vocab' onChange={inputVocabChange}></input>
+                <button onClick={handleAddVocabulary}>Add vocabulary</button>
+
+            
+            {alert.show && (
+                <p className={`homePageAlert alert-${alert.type}`} >{alert.text}</p>
+            )
+            }
         </div>
-
-            <label htmlFor='tokyoJapanese'>Tokyo Japanese</label>
-            <input type='text' id='tokyoJapanese' name='tokyoJapanese' value={vocab.tokyoJapanese} className='vocab' onChange={inputVocabChange} ></input>
-            <br></br>
-            <label htmlFor='miyazakiJapanese'>Miyazaki Japanese</label>
-            <input type='text' id='miyazakiJapanese' name='miyazakiJapanese' value={vocab.miyazakiJapanese} className='vocab' onChange={inputVocabChange}></input>
-            <button onClick={handleAddVocabulary}>Add vocabulary</button>
-
-        
-        {alert.show && alert.type === 'success' ? (
-             <p className={`homePageAlert alert-${alert.type}`} style={{ color: 'green', marginTop: '5px' }}>{alert.text}</p>
-        )
-        :
-        (   
-            <p className={`homePageAlert alert-${alert.type}`} style={{ color: 'red', marginTop: '5px' }}>{alert.text}</p>
-        )
-        }
         </>
     )
 }
