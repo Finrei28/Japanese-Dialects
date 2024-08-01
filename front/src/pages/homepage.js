@@ -60,73 +60,76 @@ export default function Homepage() {
     }
 
     useEffect(() => {
-        hideAlert();
         const cancelToken = axios.CancelToken.source();
+
         if (view === 'tokyoJapanese') {
-            const miyazakiVocab = async () => {
+            const fetchMiyazakiVocab = async () => {
                 try {
-                    const res = await axios.get(`/api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken:cancelToken.token})
-                    const miyazakiJapanese = res.data.vocab.map((item) => item.miyazakiJapanese)
+                    const res = await axios.get(`/api/v1/vocabularys/getMiyazakiVocabulary/${vocab.tokyoJapanese}`, { cancelToken: cancelToken.token });
+                    const miyazakiJapanese = res.data.vocab.map((item) => item.miyazakiJapanese);
                     setVocab((prevVocab) => ({
                         ...prevVocab,
-                        miyazakiJapanese: miyazakiJapanese
+                        miyazakiJapanese: miyazakiJapanese,
                     }));
                 } catch (error) {
-                    const { msg } = error.response.data;
-                    if (error.response.status === 404) {
-                        setVocab((prevVocab) => ({
-                            ...prevVocab,
-                            miyazakiJapanese: vocab.tokyoJapanese,
-                        }));
-                    }
                     if (axios.isCancel(error)) {
-                        console.log("cancelled")
-                    }
-                    if (msg) {
-                    showAlert({ text: msg });
+                        console.log("Request cancelled");
+                    } else {
+                        const { msg } = error.response?.data || {};
+                        if (error.response?.status === 404) {
+                            setVocab((prevVocab) => ({
+                                ...prevVocab,
+                                miyazakiJapanese: vocab.tokyoJapanese,
+                            }));
+                        }
+                        if (msg) {
+                            showAlert({ text: msg });
+                        }
                     }
                 }
-            
-            return () => {
-                cancelToken.cancel();
-            }
-            }
-            miyazakiVocab();
+            };
+
+            fetchMiyazakiVocab();
 
         } else {
-            // if (vocab.miyazakiJapanese === '') {
-            //     return;
-            // }
-            const tokyoVocab = async () => {
+            const fetchTokyoVocab = async () => {
                 try {
-                    const res = await axios.get(`/api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken:cancelToken.token})
-                    const tokyoJapanese = res.data.vocab.map((item) => item.tokyoJapanese)
+                    const res = await axios.get(`/api/v1/vocabularys/getTokyoVocabulary/${vocab.miyazakiJapanese}`, { cancelToken: cancelToken.token });
+                    const tokyoJapanese = res.data.vocab.map((item) => item.tokyoJapanese);
                     setVocab((prevVocab) => ({
                         ...prevVocab,
                         tokyoJapanese: tokyoJapanese,
                     }));
                 } catch (error) {
-                    const { msg } = error.response.data;
-                    if (error.response.status === 404) {
-                        setVocab((prevVocab) => ({
-                            ...prevVocab,
-                            tokyoJapanese: vocab.miyazakiJapanese,
-                        }));
-                    }
                     if (axios.isCancel(error)) {
-                        console.log("cancelled")
-                    }
-                    if (msg) {
-                        showAlert({ text: msg });
+                        console.log("Request cancelled");
+                    } else {
+                        const { msg } = error.response?.data || {};
+                        if (error.response?.status === 404) {
+                            setVocab((prevVocab) => ({
+                                ...prevVocab,
+                                tokyoJapanese: vocab.miyazakiJapanese,
+                            }));
                         }
+                        if (msg) {
+                            showAlert({ text: msg });
+                        }
+                    }
                 }
-            
-            return () => {
-                cancelToken.cancel();
-            }
-            }
-            tokyoVocab();
-    }}, [view === 'tokyoJapanese' ? vocab.tokyoJapanese : vocab.miyazakiJapanese]);
+            };
+
+            fetchTokyoVocab();
+        }
+
+        return () => {
+            cancelToken.cancel();
+        };
+
+    }, [view, vocab.tokyoJapanese, vocab.miyazakiJapanese]);
+
+    console.log('tokyo:', vocab.tokyoJapanese);
+    console.log('miyazaki:', vocab.miyazakiJapanese);
+
     return (
         <>
         <div className='homepage-container'>
