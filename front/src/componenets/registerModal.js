@@ -154,7 +154,6 @@ export default function Modal ({ open, children, onClose}) {
             handleSuccess();
         } catch (error) {
             const { msg } = error.response.data;
-            console.log(error);
             showAlert({ text: msg || 'There was an error' });
             setLoading(false);
         }

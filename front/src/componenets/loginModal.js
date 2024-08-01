@@ -160,7 +160,6 @@ export default function Modal ({ open, children, onClose}) {
             handleVerificationSuccess();
         } catch (error) {
             const { msg } = error.response.data;
-            console.log(error);
             showAlert({ text: msg || 'Please try again later' });
             setLoading(false);
         }

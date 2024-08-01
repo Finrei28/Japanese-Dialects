@@ -22,7 +22,6 @@ const ResetPasswordForm = () => {
     setPassword(e.target.value);
   };
   const handleSubmit = async (e) => {
-    console.log("submitting")
     hideAlert();
     e.preventDefault();
     setLoading(true);
@@ -37,7 +36,6 @@ const ResetPasswordForm = () => {
         return;
     }
     try {
-        console.log(query.get('token'),)
         await axios.post(`/api/v1/admin/reset-password`, {
         password,
         token: query.get('token'),
