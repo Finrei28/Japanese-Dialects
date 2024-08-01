@@ -149,10 +149,10 @@ export default function Homepage() {
         :
         (
         <>
-            <label htmlFor='miyazakiJapanese'>Miyazaki Japanese</label>
+            <label htmlFor='miyazakiJapanese'>Miyazaki Japanese:</label>
             <input type='text' id='miyazakiJapanese' name='miyazakiJapanese' value={vocab.miyazakiJapanese} className='vocab' onChange={inputVocabChange} ></input>
             <button style={{marginBottom:'20px'}} onClick={handleJapaneseChange}>Swap</button>
-            <label htmlFor='tokyoJapanese'>Tokyo Japanese</label>
+            <label htmlFor='tokyoJapanese'>Tokyo Japanese:</label>
             <div className='results-container'>
             {vocab.tokyoJapanese.map((item, index) => (
             <div key={index} className='results'>
