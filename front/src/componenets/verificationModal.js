@@ -1,8 +1,8 @@
 import React from 'react';
 
-const VerificationModal = ({s, handleVerification, verificationCode, InputRow, alert, LoadingButton, loading, handleVerificationCode}) => {
+const VerificationModal = ({handleVerification, verificationCode, InputRow, alert, LoadingButton, loading, handleVerificationCode}) => {
     return (
-        <form style={s} className="form" onSubmit={handleVerification}>
+        <form className="form modal-form" onSubmit={handleVerification}>
 
                         <h1 style={{textAlign:'center', marginTop:'-5%'}}>Verify your email</h1>
 

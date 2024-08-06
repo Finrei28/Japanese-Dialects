@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import SuccessNotification from './successNotification'
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,42 +10,6 @@ import '../index.css'
 import VerificationModal from './verificationModal'
 
 const URL = process.env.REACT_APP_BASE_URL;
-
-
-const modal_styles = {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: 'pink',
-    padding: '30px 30px',
-    zIndex: 1000,
-    maxHeight: '85vh',
-    width: '20%',
-    maxWidth: '500px',
-    overflowY: 'auto',
-    boxShadow: "0 0 10px rgba(0, 0, 0, 0.75)",
-    borderRadius: "20px",
-}
-
-const overlay_style = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    zIndex: 1000
-}
-
-const s = {
-    backgroundColor: "white",
-    maxWidth: "600px",
-    margin: "20px auto",
-    padding: "50px 10px",
-    // boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-    borderRadius: "20px",
-}
 
 export default function Modal ({ open, children, onClose}) {
     const [registerationStep, setRegisterationStep] = useState(1);
@@ -73,6 +37,18 @@ export default function Modal ({ open, children, onClose}) {
         confirmPassword: '',
         email: '',
     });
+
+    useEffect(() => {
+        if (open) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+
+        return () => {
+          document.body.style.overflow = '';
+        };
+      }, [open]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -168,12 +144,12 @@ export default function Modal ({ open, children, onClose}) {
     
     return ReactDom.createPortal(
         <>
-        <div style={overlay_style}/>
+        <div className='model-overlay_style'/>
             <div className='modal' >
             <CloseIcon style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px",}} onClick={handleClose}></CloseIcon>
             <div className='login-container'>
                 {registerationStep === 1 ? (
-                    <form style={s} className="form" onSubmit={handleRegister}>
+                    <form className="form modal-form" onSubmit={handleRegister}>
 
                         <h1 style={{textAlign:'center', marginTop:'-5%'}}>Admin Registeration</h1>
 
@@ -223,7 +199,6 @@ export default function Modal ({ open, children, onClose}) {
                 :
                 (
                     <VerificationModal
-                        s = {s}
                         handleVerification={handleVerification}
                         verificationCode={verificationCode}
                         InputRow={InputRow}
