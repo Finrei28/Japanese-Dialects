@@ -147,7 +147,7 @@ export default function Modal ({ open, children, onClose}) {
         <div className='model-overlay_style'/>
             <div className='modal' >
             <CloseIcon style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px",}} onClick={handleClose}></CloseIcon>
-            <div className='login-container'>
+            <div>
                 {registerationStep === 1 ? (
                     <form className="form modal-form" onSubmit={handleRegister}>
 

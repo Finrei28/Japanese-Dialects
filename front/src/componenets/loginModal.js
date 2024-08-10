@@ -168,7 +168,7 @@ export default function Modal ({ open, children, onClose}) {
         <div className='model-overlay_style' onClick={handleClose}/>
             <div className='modal' onClick={(e) => e.stopPropagation()} >
             <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', padding:"5px 10px",}} onClick={handleClose}>×</button>
-            <div className='login-container'>
+            <div>
                 {forgotState ?
                 (
                     <form className="form modal-form" onSubmit={handleForgotPassword}>

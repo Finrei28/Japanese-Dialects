@@ -13,11 +13,11 @@ export default function Navbar() {
 
     const [admin, setAdmin] = useState('')
     useEffect(() => {
-        const token = Cookies.get('token');  // Get the token once
+        const token = Cookies.get('token');
         if (token) {
-            setAdmin(token);  // Update state with the token
+            setAdmin(token);
         } else {
-            setAdmin('');  // Ensure admin state is cleared if token is not present
+            setAdmin('');
         }
     }, []); 
     const handleOpenModel = () => {
